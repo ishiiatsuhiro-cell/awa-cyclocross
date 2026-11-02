@@ -1,0 +1,125 @@
+---
+import { client } from '../../lib/microcms';
+
+type News = {
+  id: string;
+  title: string;
+  date: string;
+  category: string;
+  body: string;
+};
+
+export async function getStaticPaths() {
+  const articles = await client.getAllContents<News>({
+    endpoint: 'news',
+  });
+
+  return articles.map((article) => ({
+    params: { id: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{article.title} | AWA CYCLOCROSS</title>
+  </head>
+  <body>
+  <header class="site-header">
+    <a href="/" class="site-logo">
+      <span class="logo-mark">AWA</span>
+      <span>AWA CYCLOCROSS</span>
+    </a>
+  </header>
+
+    <main>
+      <p><a href="/">← NEWS一覧に戻る</a></p>
+
+      <p>
+        {new Date(article.date).toLocaleDateString('ja-JP', {
+          timeZone: 'Asia/Tokyo',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })}
+        ｜ {article.category}
+      </p>
+
+      <h1>{article.title}</h1>
+
+      <article set:html={article.body} />
+    </main>
+  </body>
+</html>
+<style>
+  :global(body) {
+    margin: 0;
+    background: #f5f3ec;
+    color: #173f46;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    line-height: 1.8;
+  }
+
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 80px 24px 120px;
+  }
+
+  a {
+    color: #2f6f78;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.35;
+    margin: 24px 0 40px;
+    letter-spacing: 0.02em;
+  }
+
+  article {
+    border-top: 2px solid #173f46;
+    padding-top: 32px;
+    color: #273e40;
+  }
+
+  article :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+.site-header {
+  padding: 20px 32px;
+  border-bottom: 1px solid #d5d9d3;
+}
+
+.site-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: #173f46;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.logo-mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid #173f46;
+  font-size: 13px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+</style>

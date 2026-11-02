@@ -1,0 +1,143 @@
+---
+import { client } from '../../lib/microcms';
+
+type News = {
+  id: string;
+  title: string;
+  date: string;
+  category: string | string[];
+};
+
+const news = await client.getAllContents<News>({
+  endpoint: 'news',
+});
+
+news.sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+const formatDate = (date: string) =>
+  new Date(date)
+    .toLocaleDateString('ja-JP', {
+      timeZone: 'Asia/Tokyo',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    .replaceAll('/', '.');
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEWS | AWA CYCLOCROSS</title>
+    <style>
+      :global(body) {
+        margin: 0;
+        background: #f5f3ec;
+        color: #173f46;
+        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      }
+
+      .site-header {
+        padding: 20px 32px;
+        border-bottom: 1px solid #d5d9d3;
+      }
+
+      .site-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        color: #173f46;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+      }
+
+      .logo-mark {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border: 2px solid #173f46;
+        box-sizing: border-box;
+        font-size: 13px;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 64px 24px 120px;
+      }
+
+      h1 {
+        font-size: clamp(40px, 7vw, 72px);
+        margin: 0 0 40px;
+      }
+
+      .news-item {
+        border-top: 1px solid #b9c7c3;
+        padding: 24px 0;
+      }
+
+      .news-date {
+        font-size: 14px;
+        color: #2f6f78;
+      }
+
+      .news-category {
+        margin-left: 16px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #6a805c;
+      }
+
+      .news-title {
+        display: block;
+        margin-top: 12px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #173f46;
+        text-decoration: none;
+      }
+
+      .news-title:hover {
+        color: #2f6f78;
+      }
+
+      .back {
+        display: inline-block;
+        margin-bottom: 24px;
+        color: #2f6f78;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a href="/" class="site-logo">
+        <span class="logo-mark">AWA</span>
+        <span>AWA CYCLOCROSS</span>
+      </a>
+    </header>
+
+    <main>
+      <a href="/" class="back">← TOPに戻る</a>
+      <h1>NEWS</h1>
+
+      {news.map((item) => (
+        <article class="news-item">
+          <span class="news-date">{formatDate(item.date)}</span>
+          <span class="news-category">
+            {Array.isArray(item.category) ? item.category.join(', ') : item.category}
+          </span>
+          <a class="news-title" href={`/news/${item.id}/`}>
+            {item.title}
+          </a>
+        </article>
+      ))}
+    </main>
+  </body>
+</html>

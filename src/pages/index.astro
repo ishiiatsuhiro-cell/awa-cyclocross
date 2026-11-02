@@ -1,16 +1,603 @@
 ---
+import { client } from '../lib/microcms';
+
+type News = {
+  id: string;
+  title: string;
+  date: string;
+  category: string;
+  body: string;
+};
+
+const { contents: news } = await client.getList<News>({
+  endpoint: 'news',
+  queries: {
+    limit: 3,
+    orders: '-date',
+  },
+});
+
+console.log('microCMS NEWS:', news);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>AWA CYCLOCROSS</title>
+  <meta
+    name="description"
+    content="徳島で開催される阿波シクロクロス。阿波の山と川を楽しむローカル・シクロクロス。"
+  />
+</head>
+
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a class="brand" href="/">
+        <span class="mark">AWA</span>
+        <span>AWA CYCLOCROSS</span>
+      </a>
+
+      <div class="navlinks">
+        <a href="#race">RACE</a>
+        <a href="#news">NEWS</a>
+        <a href="#about">ABOUT</a>
+        <a href="#entry">ENTRY</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="kicker">CYCLOCROSS / TOKUSHIMA</div>
+        <h1>AWA<br />CX.</h1>
+        <p>
+          阿波の山と川、土と風。<br />
+          徳島で走る、ローカル・シクロクロス。
+        </p>
+      </div>
+
+      <div class="hero-art">
+        <span class="hero-label">RIDE THE LAND</span>
+        <div class="river"></div>
+        <div class="terrain"></div>
+      </div>
+    </section>
+
+    <section class="next" id="race">
+      <div class="next-inner">
+        <div>
+          <small>NEXT RACE</small>
+          <strong>AWA CYCLOCROSS 2026 / ROUND 01</strong>
+        </div>
+
+        <a class="cta" href="#entry">RACE INFO →</a>
+      </div>
+    </section>
+
+    <section class="section" id="news">
+      <div class="section-head">
+        <h2>NEWS</h2>
+        <a class="more" href="/news">ALL NEWS →</a>
+      </div>
+
+      <div class="news">
+        {news.map((item, index) => (
+          <article class:list={["news-card", index === 0 && "feature"]}>
+            <div>
+              <span class="date">
+  {new Date(item.date).toLocaleDateString('ja-JP', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replaceAll('/', '.')}
+</span>
+              <span class="tag">{item.category}</span>
+            </div>
+
+<div class="news-title">
+  <a href={`/news/${item.id}/`}>{item.title}</a>
+</div>
+</article>
+))}
+</div>
+</section>
+
+    <section class="section" id="entry">
+      <div class="section-head">
+        <h2>RACE INFO</h2>
+        <a class="more" href="#entry">DETAILS →</a>
+      </div>
+
+      <div class="info">
+        <article class="info-card">
+          <h3>ENTRY</h3>
+          <p>
+            カテゴリー、参加資格、エントリー方法など、
+            大会参加に必要な情報。
+          </p>
+        </article>
+
+        <article class="info-card">
+          <h3>COURSE</h3>
+          <p>
+            阿波の地形と季節のコンディションを活かした
+            コースを紹介。
+          </p>
+        </article>
+
+        <article class="info-card">
+          <h3>RESULT</h3>
+          <p>
+            レース終了後にリザルトを掲載。
+            過去大会の記録もアーカイブ。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="section-head">
+        <h2>ABOUT AWA</h2>
+      </div>
+
+      <p class="about-text">
+        「AWA」は徳島のこと。吉野川の青、四国山地の緑、
+        そして阿波の藍。土地の色をまとって、地域の人も
+        遠くから来る人も、一緒に泥だらけになる。
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <h2>AWA CYCLOCROSS</h2>
+        <p>© 2026 AWA CYCLOCROSS</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#">INSTAGRAM</a>
+        <a href="#">FACEBOOK</a>
+        <a href="#">CONTACT</a>
+      </div>
+    </div>
+  </footer>
+</body>
 </html>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+
+  :global(body) {
+    margin: 0;
+    background: #f5f3ec;
+    color: #182124;
+    font-family:
+      Inter,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Hiragino Sans",
+      "Yu Gothic",
+      sans-serif;
+    line-height: 1.65;
+  }
+
+  :global(a) {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(245, 243, 236, 0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid #d8d9d2;
+  }
+
+  .nav {
+    max-width: 1180px;
+    margin: auto;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+
+  .mark {
+    width: 38px;
+    height: 38px;
+    border: 2px solid #173f46;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+  }
+
+  .navlinks {
+    display: flex;
+    gap: 28px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+
+  .navlinks a:hover {
+    color: #2f6f78;
+  }
+
+  .hero {
+    max-width: 1180px;
+    margin: auto;
+    padding: 78px 28px 72px;
+    display: grid;
+    grid-template-columns: 1.12fr 0.88fr;
+    gap: 60px;
+    align-items: end;
+  }
+
+  .kicker {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    color: #2f6f78;
+    margin-bottom: 18px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    line-height: 1.02;
+  }
+
+  h1 {
+    font-size: clamp(64px, 9vw, 122px);
+    letter-spacing: -0.07em;
+    color: #173f46;
+  }
+
+  .hero p {
+    max-width: 590px;
+    color: #687476;
+    font-size: 17px;
+    margin: 24px 0 0;
+  }
+
+  .hero-art {
+    min-height: 360px;
+    position: relative;
+    background: #173f46;
+    overflow: hidden;
+  }
+
+  .hero-art::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        135deg,
+        transparent 0 38%,
+        rgba(255, 255, 255, 0.08) 38% 39%,
+        transparent 39% 52%,
+        rgba(106, 128, 92, 0.85) 52% 54%,
+        transparent 54%
+      );
+  }
+
+  .terrain {
+    position: absolute;
+    bottom: 0;
+    left: -5%;
+    width: 110%;
+    height: 46%;
+    background: #6a805c;
+    clip-path: polygon(
+      0 75%,
+      13% 45%,
+      24% 64%,
+      38% 20%,
+      50% 53%,
+      65% 12%,
+      77% 48%,
+      90% 24%,
+      100% 50%,
+      100% 100%,
+      0 100%
+    );
+  }
+
+  .river {
+    position: absolute;
+    right: 8%;
+    bottom: 0;
+    width: 27%;
+    height: 66%;
+    background: #2f6f78;
+    clip-path: polygon(
+      58% 0,
+      82% 0,
+      72% 25%,
+      100% 48%,
+      76% 63%,
+      83% 100%,
+      52% 100%,
+      44% 69%,
+      0 55%,
+      20% 39%,
+      9% 19%,
+      48% 27%
+    );
+  }
+
+  .hero-label {
+    position: absolute;
+    left: 24px;
+    top: 22px;
+    color: white;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    font-weight: 900;
+  }
+
+  .next {
+    border-top: 1px solid #d8d9d2;
+    border-bottom: 1px solid #d8d9d2;
+    background: #ebeae2;
+  }
+
+  .next-inner {
+    max-width: 1180px;
+    margin: auto;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 30px;
+    align-items: center;
+  }
+
+  .next small {
+    display: block;
+    color: #687476;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-weight: 900;
+  }
+
+  .next strong {
+    display: block;
+    font-size: 30px;
+    margin-top: 3px;
+  }
+
+  .cta {
+    background: #173f46;
+    color: white;
+    padding: 14px 22px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+  }
+
+  .section {
+    max-width: 1180px;
+    margin: auto;
+    padding: 92px 28px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 34px;
+  }
+
+  .section-head h2 {
+    font-size: clamp(38px, 5vw, 62px);
+    color: #173f46;
+  }
+
+  .more {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid #173f46;
+    padding-bottom: 4px;
+  }
+
+  .news {
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 1px;
+    background: #d8d9d2;
+    border: 1px solid #d8d9d2;
+  }
+
+  .news-card {
+    background: #f5f3ec;
+    padding: 28px;
+    min-height: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .news-card.feature {
+    background: white;
+  }
+
+  .date {
+    font-size: 11px;
+    color: #687476;
+    letter-spacing: 0.12em;
+    font-weight: 800;
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    font-weight: 900;
+    color: #2f6f78;
+    margin-left: 10px;
+  }
+
+  .news-title {
+    font-size: 25px;
+    font-weight: 900;
+    line-height: 1.25;
+  }
+
+  .info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .info-card {
+    border-top: 3px solid #173f46;
+    padding: 24px 0;
+  }
+
+  .info-card:nth-child(2) {
+    border-color: #2f6f78;
+  }
+
+  .info-card:nth-child(3) {
+    border-color: #6a805c;
+  }
+
+  .info-card h3 {
+    font-size: 28px;
+    color: #173f46;
+  }
+
+  .info-card p {
+    color: #687476;
+    font-size: 14px;
+  }
+
+  .about-text {
+    max-width: 720px;
+    font-size: 20px;
+  }
+
+  .footer {
+    background: #173f46;
+    color: white;
+  }
+
+  .footer-inner {
+    max-width: 1180px;
+    margin: auto;
+    padding: 56px 28px 34px;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .footer h2 {
+    font-size: 44px;
+    letter-spacing: -0.05em;
+  }
+
+  .footer p {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 22px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    align-items: end;
+  }
+
+  @media (max-width: 720px) {
+    .nav {
+      padding: 14px 18px;
+    }
+
+    .navlinks {
+      display: none;
+    }
+
+    .hero {
+      padding: 48px 18px 40px;
+      display: block;
+    }
+
+    .hero p {
+      font-size: 15px;
+    }
+
+    .hero-art {
+      margin-top: 34px;
+      min-height: 250px;
+    }
+
+    .next-inner {
+      padding: 22px 18px;
+      grid-template-columns: 1fr;
+    }
+
+    .next strong {
+      font-size: 24px;
+    }
+
+    .section {
+      padding: 62px 18px;
+    }
+
+    .section-head {
+      display: block;
+    }
+
+    .more {
+      display: inline-block;
+      margin-top: 16px;
+    }
+
+    .news {
+      grid-template-columns: 1fr;
+    }
+
+    .news-card {
+      min-height: 190px;
+    }
+
+    .info {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-inner {
+      padding: 44px 18px 28px;
+      display: block;
+    }
+
+    .footer-links {
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+  }
+</style>
