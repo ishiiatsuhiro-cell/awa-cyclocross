@@ -1,0 +1,249 @@
+/* サイト共通：基本設定・ヘッダー */
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: #f5f3ec;
+    color: #182124;
+    font-family:
+      Inter,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Hiragino Sans",
+      "Yu Gothic",
+      sans-serif;
+    line-height: 1.65;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(245, 243, 236, 0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid #d8d9d2;
+  }
+
+  .nav {
+    max-width: 1180px;
+    margin: auto;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+
+  .mark {
+    width: 38px;
+    height: 38px;
+    border: 2px solid #173f46;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+  }
+
+  .navlinks {
+    display: flex;
+    gap: 28px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+
+  .navlinks a:hover {
+    color: #2f6f78;
+  }
+
+
+  h1, h2, h3 { margin: 0; line-height: 1.02; }
+
+  @media (max-width: 720px) {
+    .nav { padding: 14px 18px; }
+    .navlinks { display: none; }
+  }
+
+/* 大会情報ページ */
+.race-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 70px 40px 120px;
+}
+
+.race-page h1 {
+  font-size: clamp(48px, 8vw, 100px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: #173f46;
+  margin: 30px 0;
+}
+
+.race-page h2 {
+  font-size: clamp(24px, 4vw, 42px);
+  margin-bottom: 24px;
+}
+
+.race-page p {
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.race-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.race-detail-card {
+  border-top: 3px solid #173f46;
+  background: #ffffff;
+  padding: 28px;
+}
+
+.race-detail-card:nth-child(2) {
+  border-top-color: #6a805c;
+}
+
+.race-detail-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #2f6f78;
+}
+
+.race-detail-card p {
+  margin: 16px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .race-details {
+    grid-template-columns: 1fr;
+  }
+}
+.race-description {
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid #d8d9d2;
+}
+
+.race-description h2 {
+  font-size: clamp(28px, 4vw, 42px);
+  color: #173f46;
+  margin: 0 0 24px;
+}
+
+.race-description-text {
+  max-width: 800px;
+  font-size: 16px;
+  line-height: 2;
+  color: #182124;
+}
+
+.race-description-text p {
+  margin: 0 0 20px;
+}
+.race-entry {
+  margin-top: 64px;
+  padding: 32px;
+  background: #edf2ef;
+  border-left: 4px solid #6a805c;
+}
+
+.race-entry h2 {
+  color: #173f46;
+  margin: 0 0 24px;
+}
+
+.entry-status {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.entry-button {
+  display: inline-block;
+  padding: 16px 32px;
+  background: #173f46;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.entry-button:hover {
+  background: #2f6f78;
+}
+.race-schedule {
+  margin: 48px 0;
+  padding: 32px;
+  background: #f0f5f2;
+  border-left: 3px solid #173f46;
+}
+
+.race-schedule h2 {
+  margin-bottom: 24px;
+}
+
+.race-schedule p {
+  line-height: 1.8;
+}
+/* エントリー受付状況 */
+.race-entry .entry-status p:first-child {
+  font-size: 20px;
+  font-weight: 700;
+  color: #173f46;
+  margin-bottom: 8px;
+}
+
+.race-entry .entry-status p:last-child:not(:first-child) {
+  font-size: 14px;
+  font-weight: 400;
+  color: #526568;
+  line-height: 1.7;
+}
+
+/* シクロクロス大会リンク集 */
+.nearby-races {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.race-link {
+  display: block;
+  padding: 18px 22px;
+  background: #f0f5f2;
+  border-left: 4px solid #2f6f78;
+  color: #173f46;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.race-link:hover {
+  background: #dceae5;
+}

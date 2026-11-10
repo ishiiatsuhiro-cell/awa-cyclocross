@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css';
 import { client } from '../lib/microcms';
 
 type News = {
@@ -7,6 +8,17 @@ type News = {
   date: string;
   category: string;
   body: string;
+};
+type Race = {
+  title: string;
+  date: string;
+  venue: string;
+  description: string;
+  entryUrl?: string;
+  entryStatus?: string[];
+  schedule?: string;
+  access?: string;
+  mapUrl?: string;
 };
 
 const { contents: news } = await client.getList<News>({
@@ -17,8 +29,11 @@ const { contents: news } = await client.getList<News>({
   },
 });
 
-console.log('microCMS NEWS:', news);
+const race = await client.getObject<Race>({
+  endpoint: 'race',
+});
 ---
+
 
 <html lang="ja">
 <head>
@@ -27,7 +42,7 @@ console.log('microCMS NEWS:', news);
   <title>AWA CYCLOCROSS</title>
   <meta
     name="description"
-    content="徳島で開催される阿波シクロクロス。阿波の山と川を楽しむローカル・シクロクロス。"
+    content="徳島で開催される阿波シクロクロス。"
   />
 </head>
 
@@ -40,40 +55,40 @@ console.log('microCMS NEWS:', news);
       </a>
 
       <div class="navlinks">
-        <a href="#race">RACE</a>
-        <a href="#news">NEWS</a>
-        <a href="#about">ABOUT</a>
-        <a href="#entry">ENTRY</a>
+        <a href="/race">RACE</a>
+        <a href="/news">NEWS</a>
+        <a href="/race#entry">ENTRY</a>
       </div>
     </nav>
   </header>
 
   <main>
     <section class="hero">
-      <div>
-        <div class="kicker">CYCLOCROSS / TOKUSHIMA</div>
-        <h1>AWA<br />CX.</h1>
-        <p>
-          阿波の山と川、土と風。<br />
-          徳島で走る、ローカル・シクロクロス。
-        </p>
-      </div>
 
-      <div class="hero-art">
-        <span class="hero-label">RIDE THE LAND</span>
-        <div class="river"></div>
-        <div class="terrain"></div>
-      </div>
+<div class="hero-art">
+  <img src="/awa-logo.png" alt="AWA CYCLOCROSS ロゴ">
+</div>
     </section>
 
     <section class="next" id="race">
       <div class="next-inner">
         <div>
           <small>NEXT RACE</small>
-          <strong>AWA CYCLOCROSS 2026 / ROUND 01</strong>
-        </div>
-
-        <a class="cta" href="#entry">RACE INFO →</a>
+          <strong>{race.title}</strong>
+        
+        <p>
+  {new Date(race.date).toLocaleDateString('ja-JP', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })}
+  <br />
+  {race.venue}
+</p>
+</div> 
+        <a class="cta" href="/race">RACE INFO →</a>
+      
       </div>
     </section>
 
@@ -84,8 +99,8 @@ console.log('microCMS NEWS:', news);
       </div>
 
       <div class="news">
-        {news.map((item, index) => (
-          <article class:list={["news-card", index === 0 && "feature"]}>
+        {news.map((item) => (
+          <article class="news-card">
             <div>
               <span class="date">
   {new Date(item.date).toLocaleDateString('ja-JP', {
@@ -106,50 +121,23 @@ console.log('microCMS NEWS:', news);
 </div>
 </section>
 
-    <section class="section" id="entry">
-      <div class="section-head">
-        <h2>RACE INFO</h2>
-        <a class="more" href="#entry">DETAILS →</a>
-      </div>
 
-      <div class="info">
-        <article class="info-card">
-          <h3>ENTRY</h3>
-          <p>
-            カテゴリー、参加資格、エントリー方法など、
-            大会参加に必要な情報。
-          </p>
-        </article>
 
-        <article class="info-card">
-          <h3>COURSE</h3>
-          <p>
-            阿波の地形と季節のコンディションを活かした
-            コースを紹介。
-          </p>
-        </article>
+<section class="section" id="about">
+  <div class="section-head">
+    <h2>LINKS</h2>
+  </div>
 
-        <article class="info-card">
-          <h3>RESULT</h3>
-          <p>
-            レース終了後にリザルトを掲載。
-            過去大会の記録もアーカイブ。
-          </p>
-        </article>
-      </div>
-    </section>
+  <p class="about-text">
+    岡山・四国、関西のシクロクロス大会
+  </p>
 
-    <section class="section" id="about">
-      <div class="section-head">
-        <h2>ABOUT AWA</h2>
-      </div>
+  <div class="nearby-races">
+    <a href="https://kansaicross.com" class="race-link">関西シクロクロス ↗</a>
+    <a href="https://shikoku-cyclocross.com" class="race-link">岡山・四国シクロクロス ↗</a>
+  </div>
+</section>
 
-      <p class="about-text">
-        「AWA」は徳島のこと。吉野川の青、四国山地の緑、
-        そして阿波の藍。土地の色をまとって、地域の人も
-        遠くから来る人も、一緒に泥だらけになる。
-      </p>
-    </section>
   </main>
 
   <footer class="footer">
@@ -160,204 +148,54 @@ console.log('microCMS NEWS:', news);
       </div>
 
       <div class="footer-links">
-        <a href="#">INSTAGRAM</a>
-        <a href="#">FACEBOOK</a>
-        <a href="#">CONTACT</a>
-      </div>
+  <a
+    href="https://www.facebook.com/awacyclocross?locale=ja_JP"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Facebook"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.51 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/>
+    </svg>
+    <span>FACEBOOK</span>
+  </a>
+
+  <a href="mailto:awacyclocross@gmail.com">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2"/>
+      <path d="m3 7 9 6 9-6"/>
+    </svg>
+    <span>CONTACT</span>
+  </a>
+</div>
     </div>
   </footer>
 </body>
 </html>
 
 <style>
-  :global(*) {
-    box-sizing: border-box;
-  }
-
-  :global(html) {
-    scroll-behavior: smooth;
-  }
-
-  :global(body) {
-    margin: 0;
-    background: #f5f3ec;
-    color: #182124;
-    font-family:
-      Inter,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Hiragino Sans",
-      "Yu Gothic",
-      sans-serif;
-    line-height: 1.65;
-  }
-
-  :global(a) {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: rgba(245, 243, 236, 0.94);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid #d8d9d2;
-  }
-
-  .nav {
-    max-width: 1180px;
-    margin: auto;
-    padding: 18px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-  }
-
-  .mark {
-    width: 38px;
-    height: 38px;
-    border: 2px solid #173f46;
-    display: grid;
-    place-items: center;
-    font-size: 11px;
-  }
-
-  .navlinks {
-    display: flex;
-    gap: 28px;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-  }
-
-  .navlinks a:hover {
-    color: #2f6f78;
-  }
 
   .hero {
     max-width: 1180px;
-    margin: auto;
-    padding: 78px 28px 72px;
-    display: grid;
-    grid-template-columns: 1.12fr 0.88fr;
-    gap: 60px;
-    align-items: end;
+    margin: 0 auto;
+    padding: 16px 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .kicker {
-    font-size: 12px;
-    font-weight: 900;
-    letter-spacing: 0.22em;
-    color: #2f6f78;
-    margin-bottom: 18px;
-  }
 
   h1,
   h2,
-  h3 {
-    margin: 0;
-    line-height: 1.02;
-  }
 
-  h1 {
-    font-size: clamp(64px, 9vw, 122px);
-    letter-spacing: -0.07em;
-    color: #173f46;
-  }
 
-  .hero p {
-    max-width: 590px;
-    color: #687476;
-    font-size: 17px;
-    margin: 24px 0 0;
-  }
+.hero-art {
+  min-height: 0;
+  position: relative;
+  background: transparent;
+  overflow: hidden;
+}
 
-  .hero-art {
-    min-height: 360px;
-    position: relative;
-    background: #173f46;
-    overflow: hidden;
-  }
-
-  .hero-art::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(
-        135deg,
-        transparent 0 38%,
-        rgba(255, 255, 255, 0.08) 38% 39%,
-        transparent 39% 52%,
-        rgba(106, 128, 92, 0.85) 52% 54%,
-        transparent 54%
-      );
-  }
-
-  .terrain {
-    position: absolute;
-    bottom: 0;
-    left: -5%;
-    width: 110%;
-    height: 46%;
-    background: #6a805c;
-    clip-path: polygon(
-      0 75%,
-      13% 45%,
-      24% 64%,
-      38% 20%,
-      50% 53%,
-      65% 12%,
-      77% 48%,
-      90% 24%,
-      100% 50%,
-      100% 100%,
-      0 100%
-    );
-  }
-
-  .river {
-    position: absolute;
-    right: 8%;
-    bottom: 0;
-    width: 27%;
-    height: 66%;
-    background: #2f6f78;
-    clip-path: polygon(
-      58% 0,
-      82% 0,
-      72% 25%,
-      100% 48%,
-      76% 63%,
-      83% 100%,
-      52% 100%,
-      44% 69%,
-      0 55%,
-      20% 39%,
-      9% 19%,
-      48% 27%
-    );
-  }
-
-  .hero-label {
-    position: absolute;
-    left: 24px;
-    top: 22px;
-    color: white;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    font-weight: 900;
-  }
 
   .next {
     border-top: 1px solid #d8d9d2;
@@ -426,7 +264,7 @@ console.log('microCMS NEWS:', news);
 
   .news {
     display: grid;
-    grid-template-columns: 1.25fr 0.75fr;
+    grid-template-columns: 1fr;
     gap: 1px;
     background: #d8d9d2;
     border: 1px solid #d8d9d2;
@@ -441,9 +279,6 @@ console.log('microCMS NEWS:', news);
     justify-content: space-between;
   }
 
-  .news-card.feature {
-    background: white;
-  }
 
   .date {
     font-size: 11px;
@@ -466,34 +301,6 @@ console.log('microCMS NEWS:', news);
     line-height: 1.25;
   }
 
-  .info {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-
-  .info-card {
-    border-top: 3px solid #173f46;
-    padding: 24px 0;
-  }
-
-  .info-card:nth-child(2) {
-    border-color: #2f6f78;
-  }
-
-  .info-card:nth-child(3) {
-    border-color: #6a805c;
-  }
-
-  .info-card h3 {
-    font-size: 28px;
-    color: #173f46;
-  }
-
-  .info-card p {
-    color: #687476;
-    font-size: 14px;
-  }
 
   .about-text {
     max-width: 720px;
@@ -534,22 +341,13 @@ console.log('microCMS NEWS:', news);
   }
 
   @media (max-width: 720px) {
-    .nav {
-      padding: 14px 18px;
-    }
 
-    .navlinks {
-      display: none;
-    }
 
     .hero {
       padding: 48px 18px 40px;
       display: block;
     }
 
-    .hero p {
-      font-size: 15px;
-    }
 
     .hero-art {
       margin-top: 34px;
@@ -586,9 +384,6 @@ console.log('microCMS NEWS:', news);
       min-height: 190px;
     }
 
-    .info {
-      grid-template-columns: 1fr;
-    }
 
     .footer-inner {
       padding: 44px 18px 28px;
@@ -599,5 +394,13 @@ console.log('microCMS NEWS:', news);
       margin-top: 30px;
       flex-wrap: wrap;
     }
+  }
+
+  .hero-art img {
+    display: block;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    object-position: center;
   }
 </style>

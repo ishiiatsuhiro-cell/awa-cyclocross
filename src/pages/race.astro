@@ -1,0 +1,183 @@
+---
+import '../styles/global.css';
+import { client } from '../lib/microcms';
+
+type Race = {
+  title: string;
+  date: string;
+  venue: string;
+  description?: string;
+  entryUrl?: string;
+  entryStatus?: string[];
+  schedule?: string;
+  access?: string;
+  mapUrl?: string;
+  courseMapPdf?: string;
+  entryListPdf?: string;
+};
+
+const race = await client.getObject<Race>({
+  endpoint: 'race',
+});
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RACE | AWA CYCLOCROSS</title>
+  </head>
+  <body>
+      <header class="header">
+    <nav class="nav">
+      <a class="brand" href="/">
+        <span class="mark">AWA</span>
+        <span>AWA CYCLOCROSS</span>
+      </a>
+
+      <div class="navlinks">
+        <a href="/race">RACE</a>
+        <a href="/#news">NEWS</a>
+        <a href="/race#entry">ENTRY</a>
+      </div>
+    </nav>
+  </header>
+    <main class="race-page">
+      <a href="/">← TOP</a>
+      <h1>RACE INFO</h1>
+      <h2>{race.title}</h2>
+      <div class="race-details">
+      <div class="race-detail-card">
+      <span class="race-detail-label">DATE / 開催日</span>
+    <p>
+      {new Date(race.date).toLocaleDateString('ja-JP', {
+        timeZone: 'Asia/Tokyo',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })}
+    </p>
+  </div>
+
+  <div class="race-detail-card">
+    <span class="race-detail-label">VENUE / 開催場所</span>
+    <p>{race.venue}</p>
+  </div>
+</div>
+<section class="race-entry" id="entry">
+  <h2>大会エントリー / ENTRY INFO</h2>
+
+{race.entryStatus && (
+  <div class="entry-status">
+    <p>
+      {String(race.entryStatus).includes('受付前')
+        ? '現在、エントリー受付前です'
+        : race.entryStatus}
+    </p>
+    {String(race.entryStatus).includes('受付前') && (
+      <p>エントリー開始までしばらくお待ちください。</p>
+    )}
+  </div>
+)}
+  {String(race.entryStatus).includes('受付中') && race.entryUrl && (
+    <a href={race.entryUrl}
+      class="entry-button"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      エントリーはこちら →
+    </a>
+  )}
+</section>
+{race.description && (
+  <section class="race-description">
+    <h2>ABOUT THE RACE</h2>
+    <div class="race-description-text" set:html={race.description} />
+  </section>
+)}
+<section class="race-schedule">
+  <h2>RACE SCHEDULE</h2>
+  {race.schedule ? (
+    <div set:html={race.schedule} />
+  ) : (
+    <p>COMING SOON</p>
+  )}
+</section>
+<section class="race-schedule">
+  <h2>COURSE MAP</h2>
+  {race.courseMapPdf ? (
+    <a
+      href={race.courseMapPdf}
+      class="entry-button"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      コースマップを見る（PDF） →
+    </a>
+  ) : (
+    <p>coming soon</p>
+  )}
+</section>
+<section class="race-schedule">
+  <h2>ENTRY LIST</h2>
+  {race.entryListPdf ? (
+    <a
+      href={race.entryListPdf}
+      class="entry-button"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      エントリーリストを見る（PDF） →
+    </a>
+  ) : (
+    <p>coming soon</p>
+  )}
+</section>
+
+<section class="race-schedule">
+  <h2>ACCESS / 会場アクセス</h2>
+
+  {race.access && (
+    <div set:html={race.access} />
+  )}
+
+  {race.mapUrl && (
+    <p>
+      <a
+        href={race.mapUrl}
+        class="entry-button"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Googleマップで会場を見る →
+      </a>
+    </p>
+  )}
+</section>
+
+    </main>
+  </body>
+
+<style>
+    :global(.header a) {
+  text-decoration: none !important;
+  color: inherit;
+}
+  h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1.1;
+    margin: 32px 0;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  h2 {
+    font-size: clamp(24px, 3vw, 36px);
+    margin-bottom: 24px;
+  }
+</style>
+</html>
