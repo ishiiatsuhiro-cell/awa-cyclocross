@@ -71,27 +71,31 @@ const race = await client.getObject<Race>({
 </div>
     </section>
 
-    <section class="next" id="race">
-      <div class="next-inner">
-        <div>
-          <small>NEXT RACE</small>
-          <strong>{race.title}</strong>
-        
-        <p>
-  {new Date(race.date).toLocaleDateString('ja-JP', {
-    timeZone: 'Asia/Tokyo',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })}
-  <br />
-  {race.venue}
-</p>
-</div> 
-        <a class="cta" href="/race">RACE INFO →</a>
-      
-      </div>
-    </section>
+
+<section class="next" id="race">
+  <div class="next-inner">
+    <div class="next-content">
+      <small>NEXT RACE / 2026–27 SEASON</small>
+
+      <h2 class="next-date">
+        {new Date(race.date).toLocaleDateString('ja-JP', {
+          timeZone: 'Asia/Tokyo',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).replaceAll('/', '.')}
+      </h2>
+
+      <strong class="next-title">{race.title}</strong>
+
+      <p class="next-venue">{race.venue}</p>
+    </div>
+
+    <a class="cta" href="/race">
+      RACE INFO →
+    </a>
+  </div>
+</section>
 
     <section class="section" id="news">
       <div class="section-head">
@@ -199,12 +203,14 @@ const race = await client.getObject<Race>({
 
 
   .next {
-    border-top: 1px solid #d8d9d2;
-    border-bottom: 1px solid #d8d9d2;
-    background: #ebeae2;
+    border-top: 3px solid #719985;
+    border-bottom: none;
+    background: #193f49;
+    color: #ffffff;
   }
 
   .next-inner {
+    background transparent;
     max-width: 1180px;
     margin: auto;
     padding: 28px;
@@ -216,26 +222,62 @@ const race = await client.getObject<Race>({
 
   .next small {
     display: block;
-    color: #687476;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    font-weight: 900;
-  }
-
-  .next strong {
-    display: block;
-    font-size: 30px;
-    margin-top: 3px;
-  }
-
-  .cta {
-    background: #173f46;
-    color: white;
-    padding: 14px 22px;
-    font-size: 12px;
-    font-weight: 900;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
     letter-spacing: 0.12em;
+    line-hight: 1.5;
   }
+
+
+.next .next-title {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700;
+  line-height: 1.5;
+  color: #ffffff;
+}
+
+.next .next-venue {
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #d5e2e3;
+}
+
+
+.next .next-date {
+  margin: 8px 0 12px;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+
+.next .cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  border: 1px solid #ffffff;
+  background: transparent;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+
+.next .cta:hover {
+  background: #ffffff;
+  color: #193f49;
+}
+
 
   .section {
     max-width: 1180px;
@@ -263,29 +305,29 @@ const race = await client.getObject<Race>({
     padding-bottom: 4px;
   }
 
-  .news {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1px;
-    background: #d8d9d2;
-    border: 1px solid #d8d9d2;
-  }
+.news {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: #d8d9d2;
+  border: 1px solid #719985;
+}
 
-  .news-card {
-    background: #f5f3ec;
-    padding: 28px;
-    min-height: 230px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
+.news-card {
+  background: #f5f3ec;
+  padding: 24px 28px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
   .date {
-    font-size: 11px;
-    color: #687476;
-    letter-spacing: 0.12em;
-    font-weight: 800;
+    font-size: 12px;
+    color: #456b60;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    line-height: 1.5;
   }
 
   .tag {
@@ -404,4 +446,5 @@ const race = await client.getObject<Race>({
     object-fit: cover;
     object-position: center;
   }
+
 </style>
